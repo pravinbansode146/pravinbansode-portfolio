@@ -1,0 +1,87 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block content %}
+<section class="hero" id="home">
+  <div class="room-scene" role="img" aria-label="Illustrated cozy developer room">
+    <div class="hero-copy">
+      <p class="eyebrow">PYTHON DEVELOPER · BACKEND & WEB APPS</p>
+      <h1>Hi, I'm <span>{{ profile.name }}</span></h1>
+      <h2>Build. Learn. Ship. Repeat.</h2>
+      <p class="lead">{{ profile.summary }}</p>
+      <div class="hero-actions"><a class="btn primary" href="#projects">Explore My Journey <span>↗</span></a><a class="btn ghost" href="#contact">Let's connect</a></div>
+    </div>
+  </div>
+  <aside class="profile-rail">
+    <div class="profile-card">
+      <!--<div class="avatar-wrap"><img id="avatarPreview" src="{% static 'img/profile-placeholder.svg' %}" alt="Profile photo"><label for="avatarUpload" title="Upload a profile photo">＋</label></div>-->
+      <div class="avatar-wrap"><img id="avatarPreview" src="{% static 'img/profilephoto.jpg' %}" alt="Profile photo"></div>
+      <input id="avatarUpload" type="file" accept="image/*" hidden>
+      <h3>{{ profile.name }}</h3><p>{{ profile.role }}</p><small>⌖ {{ profile.location }}</small><small>✉ {{ profile.email }}</small><small>in <a href="{{ profile.linkedin }}" target="_blank" rel="noreferrer">LinkedIn profile</a></small>
+      <div class="socials"><a href="{{ profile.linkedin }}" target="_blank" rel="noreferrer">in</a><a href="https://github.com/pravinbansode146" target="_blank" rel="noreferrer" aria-label="GitHub profile placeholder">⌘</a><a href="mailto:{{ profile.email }}">✉</a></div>
+    </div>
+    <div class="rail-card"><h3>Quick links</h3><a href="{% static 'docs/Resume.pdf' %}" download>⇩ Download Resume</a><a href="#contact">✉ Contact Me</a><a href="{{ profile.linkedin }}" target="_blank" rel="noreferrer">in LinkedIn</a><a href="https://github.com/" target="_blank" rel="noreferrer">⌘ GitHub (https://github.com/pravinbansode146)</a></div>
+    <div class="rail-card"><h3>Featured skills</h3><div class="skill-pills">{% for skill in profile.skills.Languages %}<span>{{ skill }}</span>{% endfor %}{% for skill in profile.skills.Frameworks %}<span>{{ skill }}</span>{% endfor %}</div></div>
+    <!--<div class="rail-card audio-card"><button id="musicToggle" aria-label="Toggle ambient sound">▶</button><div><b>Relaxing Coding Vibes</b><small>Optional ambient sound</small></div><span>♪</span></div>-->
+  </aside>
+</section>
+
+<section class="section" id="explore">
+  <div class="section-heading"><div><p class="eyebrow">YOUR NEXT CLICK STARTS A STORY</p><h2>Explore my portfolio</h2><p>Click any section or object in the room to discover more.</p></div></div>
+  <div class="section-grid">
+    <a class="section-tile" href="#about"><span>♙</span><b>About</b><small>Get to know me</small></a>
+    <a class="section-tile" href="#skills"><span>⚙</span><b>Skills</b><small>Technologies & tools</small></a>
+    <a class="section-tile" href="#experience"><span>▣</span><b>Experience</b><small>My work journey</small></a>
+    <a class="section-tile" href="#projects"><span>⌘</span><b>Projects</b><small>Real-world apps</small></a>
+    <a class="section-tile" href="{% url 'gallery' %}"><span>▧</span><b>Gallery</b><small>Study materials</small></a>
+    <a class="section-tile" href="#education"><span>◇</span><b>Education</b><small>Academic background</small></a>
+    <a class="section-tile" href="#certifications"><span>♜</span><b>Certifications</b><small>Verified courses</small></a>
+    <a class="section-tile" href="#contact"><span>✉</span><b>Contact</b><small>Let's connect</small></a>
+  </div>
+</section>
+
+<section class="section detail-panel" id="about"><p class="eyebrow">01 / ABOUT</p><h2>A developer who enjoys solving real problems.</h2><p>{{ profile.summary }}</p><p>My background combines backend web development, relational databases, and data analysis.</p></section>
+<section class="section" id="skills"><p class="eyebrow">02 / SKILLS</p><h2>My developer toolkit</h2><div class="skill-groups">{% for group, skills in profile.skills.items %}<div class="skill-group"><h3>{{ group }}</h3><div class="skill-pills">{% for skill in skills %}<span class="animated-skill">{{ skill }}</span>{% endfor %}</div></div>{% endfor %}</div></section>
+<section class="section" id="experience"><p class="eyebrow">03 / EXPERIENCE</p><h2>Where I've contributed</h2><div class="timeline">{% for job in profile.experience %}<article class="timeline-item"><span class="timeline-dot"></span><p class="eyebrow">{{ job.dates }}</p><h3>{{ job.role }}</h3><h4>{{ job.company }}</h4><ul>{% for item in job.items %}<li>{{ item }}</li>{% endfor %}</ul></article>{% endfor %}</div></section>
+<section class="section" id="projects"><p class="eyebrow">04 / SELECTED WORK</p><h2>Projects built with purpose</h2><div class="project-grid">{% for project in profile.projects %}<article class="project-card"><div class="project-art"><span>{% if forloop.counter == 1 %}🛍{% elif forloop.counter == 2 %}📚{% elif forloop.counter == 3 %}🏦{% else %}🪪{% endif %}</span><small>PROJECT 0{{ forloop.counter }}</small></div><div class="project-body"><h3>{{ project.name }}</h3><p>{{ project.description }}</p><div class="stack">{{ project.stack }}</div><button class="text-button project-more" data-project="{{ forloop.counter0 }}">Read project details ↗</button></div></article>{% endfor %}</div></section>
+<section class="section" id="education"><p class="eyebrow">05 / EDUCATION</p><h2>Learning foundations</h2><article class="simple-card">{{ profile.education }}</article></section>
+<section class="section" id="certifications"><p class="eyebrow">06 / CERTIFICATIONS</p><h2>Learning beyond the classroom</h2><div class="cert-list">{% for cert in profile.certifications %}<article class="simple-card">♜ &nbsp; {{ cert }}</article>{% endfor %}</div></section>
+<section class="section" id="gallery">
+  <p class="eyebrow">07 / RESOURCE ROOM</p>
+  <h2>Study materials gallery</h2>
+  <p>Share and preview learning resources. Add files through the Django admin.</p>
+  
+  <div class="gallery-grid">
+    {% for item in gallery_items %}
+      <article class="gallery-card">
+        <span class="file-badge">{{ item.kind|upper }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description|truncatechars:100 }}</p>
+        {% if item.kind == "image" %}
+          <img controls preload="metadata" src="{{ item.file.url }}" alt="{{ item.title }}">
+          <a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Preview image ↗</a>
+          <a href="{{ item.file.url }}" download>Download ↓</a>
+        {% elif item.kind == "video" %}
+          <video controls preload="metadata" src="{{ item.file.url }}"></video>
+          <a href="{{ item.file.url }}" download>Download ↓</a>
+        {% elif item.kind == "pdf" %}
+          {% if item.cover_image %}
+          <img src="{{ item.cover_image.url }}" alt="{{ item.title }} cover" class="pdf-cover">
+        {% else %}
+          <div class="pdf-placeholder"><span>📄</span></div>
+        {% endif %}
+          <a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Preview PDF ↗</a>
+          <a href="{{ item.file.url }}" download>Download PDF ↓</a>
+        {% else %}
+          <a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Open resource ↗</a>
+        {% endif %}
+      </article>
+    {% empty %}
+      <article class="simple-card"><h3>No public resources yet</h3>
+        <p>Use Admin → Gallery items to add videos, PDFs, images or notes.</p>
+        <a href="{% url 'gallery' %}">Open gallery page ↗</a>
+      </article>{% endfor %}</div><a class="btn ghost" href="{% url 'gallery' %}">Open full gallery →</a></section>
+<section class="section contact-section" id="contact"><p class="eyebrow">08 / SAY HELLO</p><h2>Have an opportunity or idea?</h2><p>Send a message and let's talk.</p>{% for message in messages %}<p class="notice">{{ message }}</p>{% endfor %}<form method="post" action="{% url 'contact' %}" class="contact-form">{% csrf_token %}<label>Name<input name="name" required maxlength="120"></label><label>Email<input name="email" type="email" required></label><label>Subject<input name="subject" maxlength="180"></label><label>Message<textarea name="message" rows="4" required></textarea></label><button class="btn primary" type="submit">Send message ↗</button></form><p class="muted">Or email <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></p></section>
+<div id="projectModal" class="modal" aria-hidden="true"><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button id="modalClose" class="modal-close" aria-label="Close">×</button><p class="eyebrow">PROJECT DETAILS</p><h2 id="modalTitle"></h2><p id="modalDescription"></p><p id="modalStack" class="stack"></p></div></div>
+{{ profile.projects|json_script:"project-data" }}
+{% endblock %}
+

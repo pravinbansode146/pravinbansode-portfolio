@@ -1,0 +1,42 @@
+databases:
+  - name: pravin-portfolio-db
+    plan: free
+    databaseName: pravin_portfolio
+    user: pravin_portfolio_user
+
+services:
+  - type: web
+    name: pravin-portfolio
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: pravin-portfolio.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pravin-portfolio-db
+          property: connectionString
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://pravin-portfolio.onrender.com
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+
+  - type: web
+    name: pravin-portfolio-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pravin-portfolio-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://pravin-portfolio.onrender.com

@@ -1,0 +1,24 @@
+{% extends "portfolio/base.html" %}
+{% block content %}<section class="section gallery-page"><p class="eyebrow">RESOURCE ROOM / GALLERY</p><h1>Study materials, videos & notes</h1>
+    <p>Preview resources in a new tab, or download them. The current starter does not expose public comments or anonymous uploads; this avoids spam and unsafe files.</p>
+    <div class="gallery-toolbar"><input id="gallerySearch" placeholder="Search resources…" aria-label="Search resources"><select id="galleryFilter" aria-label="Filter resources">
+            <option value="all">All types</option>
+            <option value="pdf">PDF</option>
+            <option value="video">Video</option>
+            <option value="image">Image</option>
+            <option value="note">Note</option>
+        </select>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+        {% for item in items %}
+            <article class="gallery-card" data-kind="{{ item.kind }}" data-title="{{ item.title|lower }}"><span class="file-badge">{{ item.kind|upper }}</span>
+                <h2>{{ item.title }}</h2>
+                <p>{{ item.description }}</p>
+                {% if item.kind == "image" %}
+                <a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Preview image ↗</a>
+                {% elif item.kind == "video" %}<video controls preload="metadata" src="{{ item.file.url }}"></video><a href="{{ item.file.url }}" download>Download video ↓</a>
+                {% elif item.kind == "pdf" %}<a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Preview PDF ↗</a>
+            <a href="{{ item.file.url }}" download>Download PDF ↓</a>{% else %}<a href="{{ item.file.url }}" target="_blank" rel="noreferrer">Open resource ↗</a>{% endif %}</article>
+        {% empty %}
+        <article class="simple-card"><h2>Gallery is ready for your resources</h2><p>Sign in to Django Admin and create Gallery items. Upload PDFs, videos, images, or notes.</p></article>{% endfor %}</div>
+    <a class="btn ghost" href="/">← Back to room</a></section>{% endblock %}
